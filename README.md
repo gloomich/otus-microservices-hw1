@@ -1,6 +1,8 @@
+Deployment:
+```
 kubectl apply -f k8s
+```
 
-http://arch.homework/
-http://arch.homework/health/
-http://arch.homework/otusapp/andrew/
-http://arch.homework/otusapp/andrew/health/
+Base URL: http://arch.homework/health/
+
+Additional URL (forwarding rule): http://arch.homework/otusapp/andrew/health/
