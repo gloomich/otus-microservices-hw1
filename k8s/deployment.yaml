@@ -1,0 +1,61 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: otus-homework
+  labels:
+    name: otus-homework
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: health-srv
+ namespace: otus-homework
+spec:
+ type: NodePort
+ ports:
+   - port: 8000
+     targetPort: 80
+ selector:
+   app: health
+---   
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-dep
+  namespace: otus-homework
+  labels:
+    app: health
+spec:
+  selector:
+    matchLabels:
+      app: health
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: health
+        student-name: "Andrew"
+    spec:
+      containers:            
+        - name: health
+          image: gloomich/otus-microsrvs-hw1-health
+          imagePullPolicy: Always          
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 80
+            initialDelaySeconds: 1
+            periodSeconds: 20
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 80
+            initialDelaySeconds: 1
+            periodSeconds: 20
